@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bora hablar! — Practicar español</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff;
+    --ink:#15161b;
+    --ink-soft:#6c6e78;
+    --ink-faint:#a6a8b2;
+    --line:#15161b;
+    --line-soft:#e6e6ea;
+    --success:#178a4c;
+    --success-soft:#eaf9f0;
+    --success-line:#178a4c;
+    --error:#c62839;
+    --error-soft:#fdedef;
+    --error-line:#c62839;
+    --paper:#fbfbfa;
+    --radius-lg:22px;
+    --radius-md:14px;
+    --radius-sm:9px;
+    --font-display:'Baloo 2', system-ui, sans-serif;
+    --font-body:'Work Sans', system-ui, sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .wrap{
+    max-width:640px;
+    margin:0 auto;
+    padding:28px 20px 60px;
+  }
+
+  /* ---------- Header ---------- */
+  header.top{ display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:22px; }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand-mark{ width:46px;height:46px; border-radius:50%; border:2px solid var(--line); overflow:hidden; flex:none; display:flex;align-items:center;justify-content:center; background:var(--paper); }
+  .brand-mark img{width:135%;height:135%;object-fit:contain;object-position:center 15%;}
+  .brand-name{ font-family:var(--font-display); font-weight:800; font-size:26px; letter-spacing:-0.01em; line-height:1; }
+  .eyebrow-global{ font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:0.09em; color:var(--ink-soft); text-align:right; }
+
+  /* ---------- Tabs ---------- */
+  .tabs{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:18px; }
+  .tab-btn{ font-family:var(--font-display); font-weight:700; font-size:14px; padding:11px 6px; border-radius:999px; border:1.6px solid var(--line); background:var(--bg); color:var(--ink); cursor:pointer; transition:background .15s ease, color .15s ease, transform .1s ease; letter-spacing:0.01em; }
+  .tab-btn:active{transform:scale(0.98);}
+  .tab-btn.active{ background:var(--ink); color:#fff; }
+
+  .toggle-row{ display:flex; justify-content:center; margin-bottom:16px; position:relative; z-index:1; }
+  .toggle-pill{ display:inline-flex; border:1.4px solid var(--line); border-radius:999px; padding:3px; gap:2px; }
+  .toggle-pill button{ font-family:var(--font-body); font-weight:600; font-size:13px; padding:6px 16px; border-radius:999px; border:none; background:transparent; color:var(--ink); cursor:pointer; }
+  .toggle-pill button.active{ background:var(--ink); color:#fff; }
+
+  /* ---------- Card Base ---------- */
+  .card{ background:var(--paper); border:1.6px solid var(--line); border-radius:var(--radius-lg); padding:26px 22px 22px; position:relative; overflow:hidden; }
+  .card::before{ content:""; position:absolute; inset:0; background-image:repeating-linear-gradient(to bottom, transparent 0, transparent 33px, var(--line-soft) 33px, var(--line-soft) 34px); opacity:.55; pointer-events:none; }
+  .card-row{ display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1; margin-bottom:16px; }
+  .eyebrow{ font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-soft); }
+
+  /* ---------- Forca (Ahorcado) ---------- */
+  .forca-pt{ text-align:center; font-style:italic; font-size:16px; font-weight:600; color:var(--ink); margin-bottom:14px; position:relative; z-index:1; }
+  
+  .hangman-graphic { display: flex; justify-content: center; margin-bottom: 20px; position: relative; z-index: 1; }
+  .hangman-svg { width: 110px; height: 132px; }
+  .hm-part { opacity: 0; transition: opacity 0.2s ease; }
+  .hm-part.show { opacity: 1; }
+
+  .forca-word{ display:flex; justify-content:center; gap:7px; flex-wrap:wrap; margin:6px 0 20px; position:relative; z-index:1; }
+  .forca-letter{ width:22px; text-align:center; font-family:var(--font-display); font-weight:700; font-size:22px; border-bottom:2.6px solid var(--ink); min-height:30px; text-transform: uppercase; }
+
+  .forca-keyboard{ display:flex; flex-wrap:wrap; gap:6px; justify-content:center; position:relative; z-index:1; }
+  .forca-key{ width:29px;height:36px; border:1.4px solid var(--line); border-radius:8px; background:#fff; font-family:var(--font-body); font-weight:700; font-size:13.5px; cursor:pointer; color:var(--ink); }
+  .forca-key[disabled]{opacity:.32; cursor:default;}
+  .forca-key.wrong{background:var(--error-soft); border-color:var(--error-line); color:var(--error); opacity:1;}
+  .forca-key.correct{background:var(--success-soft); border-color:var(--success-line); color:var(--success); opacity:1;}
+
+  /* ---------- Gerais e Feedback ---------- */
+  .btn{ font-family:var(--font-body); font-weight:600; font-size:14.5px; padding:12px 18px; border-radius:999px; border:1.6px solid var(--line); cursor:pointer; flex:1; text-align:center; transition:background .15s ease, color .15s ease, transform .1s ease; }
+  .btn-primary{background:var(--ink);color:#fff;}
+  .btn:active{transform:scale(0.98);}
+  
+  .next-row{ margin-top:18px; position:relative; z-index:1; }
+  
+  .feedback{ position:relative; z-index:1; margin-top:14px; border-radius:var(--radius-md); border:1.4px solid var(--line-soft); background:#fff; padding:14px 16px; display:none; }
+  .feedback.show{display:block;}
+  .feedback.ok{border-color:var(--success-line); background:var(--success-soft); color:var(--success);}
+  .feedback.no{border-color:var(--error-line); background:var(--error-soft); color:var(--error);}
+  
+  footer.foot{ text-align:center; margin-top:26px; font-size:12px; color:var(--ink-faint); }
+  
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <div class="brand-mark"><img id="headerMascot" alt="Mascote papagaio" src="https://api.dicebear.com/7.x/bottts/svg?seed=parrot"></div>
+      <div class="brand-name">Bora hablar!</div>
+    </div>
+    <div class="eyebrow-global">practicar<br>español</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn" id="tabLeerBtn">Leer</button>
+    <button class="tab-btn" id="tabEscribirBtn">Escribir</button>
+    <button class="tab-btn active" id="tabJuegosBtn">Juegos</button>
+  </div>
+
+  <!-- ================= LEER PANEL (Exemplo de estrutura) ================= -->
+  <div class="panel" id="panelLeer">
+    <div class="card">
+      <div class="card-row"><span class="eyebrow">Frase del día</span></div>
+      <p style="text-align:center; color:var(--ink-soft); position:relative; z-index:1;">Área de Leitura em construção...</p>
+    </div>
+  </div>
+
+  <!-- ================= ESCRIBIR PANEL (Exemplo de estrutura) ================= -->
+  <div class="panel" id="panelEscribir">
+    <div class="card">
+      <div class="card-row"><span class="eyebrow">Escucha y escribe</span></div>
+      <p style="text-align:center; color:var(--ink-soft); position:relative; z-index:1;">Área de Escrita em construção...</p>
+    </div>
+  </div>
+
+  <!-- ================= JUEGOS PANEL ================= -->
+  <div class="panel active" id="panelJuegos">
+    <div class="toggle-row">
+      <div class="toggle-pill">
+        <button id="gameSopaBtn">Sopa de letras</button>
+        <button class="active" id="gameForcaBtn">Ahorcado</button>
+      </div>
+    </div>
+
+    <!-- Sopa de letras (Oculto por padrão) -->
+    <div id="sopaContainer" style="display:none;">
+      <div class="card">
+        <div class="card-row"><span class="eyebrow">Encuentra las palabras</span></div>
+        <p style="text-align:center; color:var(--ink-soft); position:relative; z-index:1;">Sopa de letras em construção...</p>
+      </div>
+    </div>
+
+    <!-- Ahorcado -->
+    <div id="forcaContainer">
+      <div class="card">
+        <div class="card-row">
+          <span class="eyebrow">Adivina la palabra</span>
+        </div>
+
+        <div class="forca-pt" id="forcaPt">Dica: —</div>
+        
+        <div class="hangman-graphic" id="hangmanGraphic">
+          <svg viewBox="0 0 100 120" class="hangman-svg">
+            <!-- Estrutura da Forca -->
+            <line x1="10" y1="110" x2="90" y2="110" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+            <line x1="30" y1="110" x2="30" y2="10" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+            <line x1="30" y1="10" x2="70" y2="10" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+            <line x1="70" y1="10" x2="70" y2="30" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+            <line x1="30" y1="30" x2="50" y2="10" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+
+            <!-- Boneco de Palito -->
+            <g stroke="var(--ink)" stroke-width="4" stroke-linecap="round" fill="none">
+              <circle id="hm-part-1" class="hm-part" cx="70" cy="45" r="12" /> <!-- Cabeça -->
+              <line id="hm-part-2" class="hm-part" x1="70" y1="57" x2="70" y2="85" /> <!-- Corpo -->
+              <line id="hm-part-3" class="hm-part" x1="70" y1="65" x2="55" y2="75" /> <!-- Braço Esq -->
+              <line id="hm-part-4" class="hm-part" x1="70" y1="65" x2="85" y2="75" /> <!-- Braço Dir -->
+              <line id="hm-part-5" class="hm-part" x1="70" y1="85" x2="55" y2="105" /> <!-- Perna Esq -->
+              <line id="hm-part-6" class="hm-part" x1="70" y1="85" x2="85" y2="105" /> <!-- Perna Dir -->
+            </g>
+          </svg>
+        </div>
+
+        <div class="forca-word" id="forcaWord"></div>
+        <div class="forca-keyboard" id="forcaKeyboard"></div>
+
+        <div class="feedback" id="forcaFeedback"></div>
+
+        <div class="next-row">
+          <button class="btn btn-primary" id="forcaNewBtn" style="width:100%">Nueva palabra</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rodapé atualizado com o seu arroba -->
+  <footer class="foot">Bora hablar! — um projeto de @euomnadesign</footer>
+
+</div>
+
+<script>
+/* ============================================================
+   LÓGICA DE NAVEGAÇÃO DAS ABAS (TABS)
+============================================================ */
+document.getElementById('tabLeerBtn').addEventListener('click', () => switchTab('Leer'));
+document.getElementById('tabEscribirBtn').addEventListener('click', () => switchTab('Escribir'));
+document.getElementById('tabJuegosBtn').addEventListener('click', () => switchTab('Juegos'));
+
+function switchTab(tabName) {
+  // Reset tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+  
+  // Set active
+  document.getElementById(`tab${tabName}Btn`).classList.add('active');
+  document.getElementById(`panel${tabName}`).classList.add('active');
+}
+
+document.getElementById('gameSopaBtn').addEventListener('click', () => switchGame('Sopa'));
+document.getElementById('gameForcaBtn').addEventListener('click', () => switchGame('Forca'));
+
+function switchGame(gameName) {
+  document.getElementById('gameSopaBtn').classList.remove('active');
+  document.getElementById('gameForcaBtn').classList.remove('active');
+  
+  document.getElementById('sopaContainer').style.display = 'none';
+  document.getElementById('forcaContainer').style.display = 'none';
+  
+  document.getElementById(`game${gameName}Btn`).classList.add('active');
+  document.getElementById(`${gameName.toLowerCase()}Container`).style.display = 'block';
+  
+  if (gameName === 'Forca') initAhorcado();
+}
+
+
+/* ============================================================
+   BASES DE DADOS
+============================================================ */
+
+/* 
+ * ⚠️ ATENÇÃO: COLE SUAS LISTAS GIGANTES AQUI (READING_PHRASES, WRITE_WORDS, etc) 
+ * Para as abas Leer, Escribir e Sopa de Letras funcionarem quando você for 
+ * programá-las futuramente.
+ */
+
+// Nova Lista exclusiva para o Jogo da Forca com as dicas
+const AHORCADO_PALABRAS = [
+  // Escola e Escritório
+  { pista: "O que tem na escola para escrever", es: "LAPIZ" },
+  { pista: "O que tem na escola para anotar", es: "CUADERNO" },
+  { pista: "O que tem na escola (onde o professor escreve)", es: "PIZARRA" },
+  { pista: "Usamos para apagar", es: "BORRADOR" },
+  { pista: "Onde guardamos os cadernos", es: "MOCHILA" },
+  
+  // Design e Arte
+  { pista: "Profissional que cria interfaces e artes visuais", es: "DISENADOR" },
+  { pista: "Usado para pintar quadros", es: "PINCEL" },
+  { pista: "Combinação de letras e fontes", es: "TIPOGRAFIA" },
+
+  // Música
+  { pista: "Instrumento musical de 6 cordas", es: "GUITARRA" },
+  { pista: "Instrumento musical com teclas", es: "TECLADO" },
+  { pista: "Composição sonora", es: "MUSICA" },
+
+  // Animais
+  { pista: "Animal de estimação felino que mia", es: "GATO" },
+  { pista: "Animal de estimação que late", es: "PERRO" },
+  { pista: "Animal com pescoço muito longo", es: "JIRAFA" },
+  { pista: "Inseto que produz mel", es: "ABEJA" },
+
+  // Transporte
+  { pista: "Veículo grande para muitos passageiros", es: "AUTOBUS" },
+  { pista: "Transporte público subterrâneo", es: "METRO" },
+  { pista: "Veículo de duas rodas", es: "MOTOCICLETA" },
+
+  // Comida
+  { pista: "Fruta amarela", es: "PLATANO" },
+  { pista: "Bebida quente para acordar de manhã", es: "CAFE" },
+  { pista: "Sobremesa gelada", es: "HELADO" },
+  { pista: "Massa redonda que pedimos no delivery", es: "PIZZA" }
+];
+
+
+/* ============================================================
+   LOGICA DO JUEGO: AHORCADO
+============================================================ */
+let forcaPalavraAtual = "";
+let forcaLetrasAdivinhadas = [];
+let forcaErros = 0;
+const MAX_ERROS = 6;
+
+const ALFABETO = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
+
+function initAhorcado() {
+  const indice = Math.floor(Math.random() * AHORCADO_PALABRAS.length);
+  const palavraObj = AHORCADO_PALABRAS[indice];
+  
+  forcaPalavraAtual = palavraObj.es.toUpperCase();
+  forcaLetrasAdivinhadas = [];
+  forcaErros = 0;
+  
+  // Exibe a pista customizada
+  document.getElementById('forcaPt').textContent = `Dica: ${palavraObj.pista}`;
+  
+  document.getElementById('forcaFeedback').classList.remove('show', 'ok', 'no');
+  
+  limparBoneco();
+  renderForcaWord();
+  renderForcaKeyboard();
+}
+
+function limparBoneco() {
+  for (let i = 1; i <= MAX_ERROS; i++) {
+    const parte = document.getElementById(`hm-part-${i}`);
+    if (parte) parte.classList.remove('show');
+  }
+}
+
+function desenharParteDoBoneco(erroAtual) {
+  if (erroAtual >= 1 && erroAtual <= MAX_ERROS) {
+    document.getElementById(`hm-part-${erroAtual}`).classList.add('show');
+  }
+}
+
+function renderForcaWord() {
+  const container = document.getElementById('forcaWord');
+  container.innerHTML = "";
+  
+  for (let char of forcaPalavraAtual) {
+    const divLetra = document.createElement('div');
+    divLetra.className = 'forca-letter';
+    
+    if (forcaLetrasAdivinhadas.includes(char) || char === " ") {
+      divLetra.textContent = char;
+      if (char === " ") divLetra.style.borderBottom = "none";
+    }
+    
+    container.appendChild(divLetra);
+  }
+}
+
+function renderForcaKeyboard() {
+  const keyboard = document.getElementById('forcaKeyboard');
+  keyboard.innerHTML = "";
+  
+  ALFABETO.forEach(letra => {
+    const btn = document.createElement('button');
+    btn.className = 'forca-key';
+    btn.textContent = letra;
+    
+    btn.onclick = () => {
+      if (forcaLetrasAdivinhadas.includes(letra) || forcaErros >= MAX_ERROS) return;
+      
+      btn.disabled = true;
+      forcaLetrasAdivinhadas.push(letra);
+      
+      if (forcaPalavraAtual.includes(letra)) {
+        btn.classList.add('correct');
+        renderForcaWord();
+        checarFimDeJogo();
+      } else {
+        btn.classList.add('wrong');
+        forcaErros++;
+        desenharParteDoBoneco(forcaErros);
+        checarFimDeJogo();
+      }
+    };
+    
+    keyboard.appendChild(btn);
+  });
+}
+
+function checarFimDeJogo() {
+  const ganhou = forcaPalavraAtual.split("").every(char => forcaLetrasAdivinhadas.includes(char) || char === " ");
+  const perdeu = forcaErros >= MAX_ERROS;
+  
+  const feedback = document.getElementById('forcaFeedback');
+  
+  if (ganhou) {
+    feedback.textContent = "¡Muy bien! ¡Adivinaste la palabra!";
+    feedback.className = 'feedback show ok';
+    desabilitarTeclado();
+  } else if (perdeu) {
+    feedback.textContent = `¡Qué pena! La palabra era: ${forcaPalavraAtual}`;
+    feedback.className = 'feedback show no';
+    desabilitarTeclado();
+    
+    forcaLetrasAdivinhadas = forcaPalavraAtual.split("");
+    renderForcaWord();
+  }
+}
+
+function desabilitarTeclado() {
+  const teclas = document.querySelectorAll('.forca-key');
+  teclas.forEach(t => t.disabled = true);
+}
+
+document.getElementById('forcaNewBtn').addEventListener('click', initAhorcado);
+
+window.onload = () => {
+  initAhorcado();
+};
+
+</script>
+</body>
+</html>
