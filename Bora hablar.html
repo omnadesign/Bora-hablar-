@@ -122,7 +122,7 @@
     <button class="tab-btn active" id="tabJuegosBtn">Juegos</button>
   </div>
 
-  <!-- ================= LEER PANEL (Exemplo de estrutura) ================= -->
+  <!-- ================= LEER PANEL ================= -->
   <div class="panel" id="panelLeer">
     <div class="card">
       <div class="card-row"><span class="eyebrow">Frase del día</span></div>
@@ -130,7 +130,7 @@
     </div>
   </div>
 
-  <!-- ================= ESCRIBIR PANEL (Exemplo de estrutura) ================= -->
+  <!-- ================= ESCRIBIR PANEL ================= -->
   <div class="panel" id="panelEscribir">
     <div class="card">
       <div class="card-row"><span class="eyebrow">Escucha y escribe</span></div>
@@ -147,7 +147,7 @@
       </div>
     </div>
 
-    <!-- Sopa de letras (Oculto por padrão) -->
+    <!-- Sopa de letras -->
     <div id="sopaContainer" style="display:none;">
       <div class="card">
         <div class="card-row"><span class="eyebrow">Encuentra las palabras</span></div>
@@ -197,7 +197,6 @@
     </div>
   </div>
 
-  <!-- Rodapé atualizado com o seu arroba -->
   <footer class="foot">Bora hablar! — um projeto de @euomnadesign</footer>
 
 </div>
@@ -211,11 +210,9 @@ document.getElementById('tabEscribirBtn').addEventListener('click', () => switch
 document.getElementById('tabJuegosBtn').addEventListener('click', () => switchTab('Juegos'));
 
 function switchTab(tabName) {
-  // Reset tabs
   document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
   
-  // Set active
   document.getElementById(`tab${tabName}Btn`).classList.add('active');
   document.getElementById(`panel${tabName}`).classList.add('active');
 }
@@ -236,18 +233,16 @@ function switchGame(gameName) {
   if (gameName === 'Forca') initAhorcado();
 }
 
-
 /* ============================================================
    BASES DE DADOS
 ============================================================ */
 
 /* 
- * ⚠️ ATENÇÃO: COLE SUAS LISTAS GIGANTES AQUI (READING_PHRASES, WRITE_WORDS, etc) 
- * Para as abas Leer, Escribir e Sopa de Letras funcionarem quando você for 
- * programá-las futuramente.
+ * ⚠️ ATENÇÃO: COLE AQUI AS SUAS LISTAS ORIGINAIS (READING_PHRASES, WRITE_WORDS, etc)
+ * Quando for programar o resto do app.
  */
 
-// Nova Lista exclusiva para o Jogo da Forca com as dicas
+// Nova Lista para o Jogo da Forca com as dicas
 const AHORCADO_PALABRAS = [
   // Escola e Escritório
   { pista: "O que tem na escola para escrever", es: "LAPIZ" },
@@ -284,7 +279,6 @@ const AHORCADO_PALABRAS = [
   { pista: "Massa redonda que pedimos no delivery", es: "PIZZA" }
 ];
 
-
 /* ============================================================
    LOGICA DO JUEGO: AHORCADO
 ============================================================ */
@@ -303,9 +297,7 @@ function initAhorcado() {
   forcaLetrasAdivinhadas = [];
   forcaErros = 0;
   
-  // Exibe a pista customizada
   document.getElementById('forcaPt').textContent = `Dica: ${palavraObj.pista}`;
-  
   document.getElementById('forcaFeedback').classList.remove('show', 'ok', 'no');
   
   limparBoneco();
